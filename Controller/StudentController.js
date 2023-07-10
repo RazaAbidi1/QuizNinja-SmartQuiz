@@ -14,7 +14,7 @@ export const ViewStudentProfile = (req, res) => {
 export const UpdateStudentProfile = (req, res) => {
   const { Password, id } = req.body;
   if (id && Password) {
-    Student.updateById(id, (err, result) => {
+    Student.updateById(id, Password, (err, result) => {
       if (err) res.send({ err }).status(403);
       else res.send({ result }).status(200);
     });

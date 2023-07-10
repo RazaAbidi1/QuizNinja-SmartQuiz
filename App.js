@@ -14,6 +14,7 @@ import multer from "multer";
 import teacherRoutes from "./Routes/TeacherRoute.js";
 import StudentRoutes from "./Routes/StudentRoute.js";
 import TestRoute from "./Routes/TestRoute.js";
+import ForgetPasswordRoute from "./Routes/ForgotPasswordRoute.js";
 const upload = multer({ dest: "images/" });
 // ------
 
@@ -34,6 +35,7 @@ app.use("/Subject", SubjectRoute);
 app.use("/Teacher", teacherRoutes);
 app.use("/Student", StudentRoutes);
 app.use("/Test", TestRoute);
+app.use("/resetpassword", ForgetPasswordRoute);
 
 app.get("/check", (req, res) => {
   console.log(req);

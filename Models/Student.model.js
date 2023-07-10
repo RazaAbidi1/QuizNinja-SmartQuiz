@@ -21,10 +21,10 @@ export class Student {
     });
   };
 
-  static findByUserName = (UserName, result) => {
+  static findByEmail = (email, result) => {
     sql.query(
-      `SELECT * FROM student WHERE student_username = ?`,
-      [UserName],
+      `SELECT * FROM student WHERE student_email = ?`,
+      [email],
       (err, res) => {
         if (err) {
           result(err, null);
@@ -62,7 +62,7 @@ export class Student {
 
   static updateById = (id, values, result) => {
     sql.query(
-      "UPDATE student SET ? WHERE teacher_id = ? ",
+      "UPDATE student SET student_password = ? WHERE student_id = ? ",
       [values, id],
       (err, res) => {
         if (err) {
@@ -94,6 +94,42 @@ export class Student {
           return;
         }
         result(null, { Found: false, ...res });
+      }
+    );
+  };
+
+  static setDefaultPasswordStudent = (email, pass, cb) => {
+    sql.query(
+      "UPDATE student SET  = ? WHERE student_email = ?",
+      email,
+      pass,
+      (err, res) => {
+        if (err) {
+          cb(err, null);
+          return;
+        } else {
+          cb(null, { res });
+        }
+      }
+    );
+  };
+
+  static findDefaultPasswordStudent = (email, cb) => {
+    sql.query(
+      "select student_default_password from student where student_email = ?",
+      [email],
+      (err, res) => {
+        if (err) {
+          cb(err, null);
+          return;
+        } else {
+          if (res.length) {
+            console.log("found Student: ", res);
+            cb(null, { Found: true, ...res });
+            return;
+          }
+          cb(null, { Found: false, ...res });
+        }
       }
     );
   };

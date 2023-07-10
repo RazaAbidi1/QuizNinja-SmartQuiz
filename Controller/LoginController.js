@@ -3,8 +3,8 @@ import { Student } from "../Models/Student.model.js";
 import { Teacher } from "../Models/Teacher.model.js";
 
 export const TeacherLogin = (req, res) => {
-  let { UserName, Password } = req.body;
-  Teacher.findByUserName(UserName, (err, result) => {
+  let { email, Password } = req.body;
+  Teacher.findByEmail(email, (err, result) => {
     console.log(result);
     if (err) console.log(err);
     if (result.Found === true && result[0].teacher_password === Password) {
@@ -15,7 +15,7 @@ export const TeacherLogin = (req, res) => {
     } else {
       res.status(401).json({
         success: false,
-        message: "Invalid UserName OR Password",
+        message: "Invalid email OR Password",
         result: {},
       });
     }
@@ -23,8 +23,8 @@ export const TeacherLogin = (req, res) => {
 };
 
 export const StudentLogin = (req, res) => {
-  let { UserName, Password } = req.body;
-  Student.findByUserName(UserName, (err, result) => {
+  let { email, Password } = req.body;
+  Student.findByEmail(email, (err, result) => {
     console.log(result);
     if (err) console.log(err);
     if (result.Found === true && result[0].student_password === Password) {
@@ -35,7 +35,7 @@ export const StudentLogin = (req, res) => {
     } else {
       res.status(401).json({
         success: false,
-        message: "Invalid UserName OR Password",
+        message: "Invalid email OR Password",
         result: {},
       });
     }

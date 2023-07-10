@@ -19,7 +19,7 @@ export const TeacherSignUp = (req, res) => {
         result: {},
       });
     } else if (result.insertId) {
-      let obj = { id: result.insertId }; // yahan par kam hoga
+      let obj = { id: result.insertId };
       let token = CreateToken(obj, "Teacher");
       res.cookie("token", token, { secure: false, httpOnly: false });
       res.send({ token: token, insertId: result.insertId }).status(200);
