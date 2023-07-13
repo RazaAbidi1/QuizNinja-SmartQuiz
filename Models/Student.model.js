@@ -152,6 +152,17 @@ export class Student {
       }
     );
   };
+  static total = (cb) => {
+    sql.query("SELECT COUNT( student_id) AS total_students FROM student ;", cb);
+  };
+
+  static topNScorer = (n, cb) => {
+    sql.query(
+      "SELECT s.student_name, student_score FROM test join student s WHERE teacher_iid = 2 and s.student_id = student_iid ORDER BY student_score DESC LIMIT 3;",
+      n,
+      cb
+    );
+  };
 }
 
 // {

@@ -154,6 +154,15 @@ export class Teacher {
       }
     );
   };
+
+  static totalStudents = (id, cb) => {
+    sql.query(
+      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test where teacher_iid = 2;",
+      id,
+      cb
+    );
+  };
+
   static studentsPassed = (id, cb) => {
     sql.query(
       "SELECT COUNT(*) AS total_passed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = 2 AND t.test_result = 'Pass';",
@@ -174,6 +183,16 @@ export class Teacher {
       id,
       cb
     );
+  };
+
+  static subjectAvgOfTeacher = (id, cb) => {
+    this.Find_Subject(id, (err, res) => {
+      sql.query(
+        "SELECT t.teacher_id, t.teacher_name, AVG(ts.student_score) AS average_marks FROM teacher t JOIN test ts ON t.teacher_id = ts.teacher_iid JOIN student s ON ts.student_iid = s.student_id WHERE t.subject__id = ? GROUP BY t.teacher_id, t.teacher_name;",
+        res[0].subject_id,
+        cb
+      );
+    });
   };
 }
 

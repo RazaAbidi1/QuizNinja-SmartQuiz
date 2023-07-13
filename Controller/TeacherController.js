@@ -1,4 +1,7 @@
+import { Percent } from "@mui/icons-material";
+import { Student } from "../Models/Student.model.js";
 import { Teacher } from "../Models/Teacher.model.js";
+import { percent } from "../Services/calculatePercentage.js";
 
 export const ViewTeacherProfile = (req, res) => {
   const { id } = req.body;
@@ -35,7 +38,22 @@ export const TeacherDashboard = (req, res) => {
           Teacher.totalStudents(id, (err, total) => {
             if (err) res.status(400).send({ err });
             else {
-              res.send({ failed, pass, total }).status(200);
+              Student.total((err, allStudents) => {
+                let Percent = percent(allStudents, total);
+                Student.topNScorer(3, (err, top3) => {
+                  if (err) res.status(400).send({ err });
+                  else {
+                    Teacher.subjectAvgOfTeacher(id, (err, avg) => {
+                      if (err) res.status(400).send({ err });
+                      else {
+                        res
+                          .send({ failed, pass, total, Percent, avg, top3 })
+                          .status(200);
+                      }
+                    });
+                  }
+                });
+              });
             }
           });
         }
