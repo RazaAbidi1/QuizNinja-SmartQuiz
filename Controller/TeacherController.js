@@ -23,3 +23,23 @@ export const UpdateTeacherProfile = (req, res) => {
     res.status(400).send({ err: "Id and Password Required" });
   }
 };
+
+export const TeacherDashboard = (req, res) => {
+  const { id } = req.body;
+  Teacher.studentsFailed(id, (err, failed) => {
+    if (err) res.status(400).send({ err });
+    else {
+      Teacher.studentsPassed(id, (err, pass) => {
+        if (err) res.status(400).send({ err });
+        else {
+          Teacher.totalStudents(id, (err, total) => {
+            if (err) res.status(400).send({ err });
+            else {
+              res.send({ failed, pass, total }).status(200);
+            }
+          });
+        }
+      });
+    }
+  });
+};

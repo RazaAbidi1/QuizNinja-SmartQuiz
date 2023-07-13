@@ -154,6 +154,27 @@ export class Teacher {
       }
     );
   };
+  static studentsPassed = (id, cb) => {
+    sql.query(
+      "SELECT COUNT(*) AS total_passed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = 2 AND t.test_result = 'Pass';",
+      id,
+      cb
+    );
+  };
+  static studentsFailed = (id, cb) => {
+    sql.query(
+      "SELECT COUNT(*) AS total_failed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = 2 AND t.test_result = 'Fail';",
+      id,
+      cb
+    );
+  };
+  static totalStudents = (id, cb) => {
+    sql.query(
+      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test where test.teacher_iid = ?;",
+      id,
+      cb
+    );
+  };
 }
 
 // let test = {
