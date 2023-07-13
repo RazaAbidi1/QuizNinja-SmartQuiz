@@ -3,20 +3,13 @@ import cors from "cors";
 import LoginRoutes from "./Routes/LoginRoute.js";
 import LoginSignUp from "./Routes/SignupRoute.js";
 import QuestionRoute from "./Routes/QuestionRoute.js";
-import http from "http";
-import { Server as SocketIO } from "socket.io";
 import FeedbackRoutes from "./Routes/FeedbackRoute.js";
 import SubjectRoute from "./Routes/SubjectRoute.js";
-
-// Testing
-import fs from "fs";
-import multer from "multer";
 import teacherRoutes from "./Routes/TeacherRoute.js";
 import StudentRoutes from "./Routes/StudentRoute.js";
 import TestRoute from "./Routes/TestRoute.js";
 import ForgetPasswordRoute from "./Routes/ForgotPasswordRoute.js";
-const upload = multer({ dest: "images/" });
-// ------
+import ImageRoutes from "./Routes/ImageRoute.js";
 
 const app = express();
 const port = 8010;
@@ -27,61 +20,22 @@ app.use(express.json());
 
 app.use("*", cors({ credentials: true }));
 // Routes
-app.use("/Login", LoginRoutes);
-app.use("/SignUp", LoginSignUp);
-app.use("/Question", QuestionRoute);
-app.use("/Feedback", FeedbackRoutes);
-app.use("/Subject", SubjectRoute);
-app.use("/Teacher", teacherRoutes);
-app.use("/Student", StudentRoutes);
-app.use("/Test", TestRoute);
-app.use("/resetpassword", ForgetPasswordRoute);
+app.use("/Login", LoginRoutes); //changes
+app.use("/SignUp", LoginSignUp); //done -> email ki uniqunes check hogi
+app.use("/Question", QuestionRoute); //done
+app.use("/Feedback", FeedbackRoutes); // done
+app.use("/Subject", SubjectRoute); //done
+app.use("/Teacher", teacherRoutes); //done
+app.use("/Student", StudentRoutes); //done
+app.use("/Test", TestRoute); //done -> answer aur test mein thoray changes hongy
+app.use("/resetpassword", ForgetPasswordRoute); //done
+app.use("/images", ImageRoutes); // errors
+
+// Without token server 500 ka error dy raha hai ... usko 400 ka error hona chahiye
 
 app.get("/check", (req, res) => {
   console.log(req);
   res.send({ message: "Waiz Here" }).status(200);
 });
-
-// Testing Sockets
-// const server = http.createServer(app);
-// const io = new SocketIO(server);
-// io.on("connection", (socket) => {
-//   console.log("A client connected.");
-
-//   // Handle events from the client
-//   socket.on("event-from-client", (data) => {
-//     console.log("Event received from client:", data);
-//     // You can emit events back to the client if needed
-//     // socket.emit('event-to-client', eventData);
-//   });
-
-//   // Handle disconnection
-//   socket.on("disconnect", () => {
-//     console.log("A client disconnected.");
-//   });
-// });
-
-// Testing Images
-// app.use('/images', express.static('images'));
-app.get("/images/:imageName", (req, res) => {
-  // do a bunch of if statements to make sure the user is
-  // authorized to view this image, then
-
-  const { imageName } = req.params;
-  const readStream = fs.createReadStream(`images/${imageName}`);
-  readStream.pipe(res);
-});
-
-app.post("/api/images", upload.single("image"), (req, res) => {
-  const imageName = req.file.filename;
-  const description = req.body.description;
-
-  // Save this data to a database probably
-
-  console.log(description, imageName);
-  res.send({ description, imageName });
-});
-
-//--------------------------
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

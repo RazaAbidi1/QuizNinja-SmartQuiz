@@ -13,6 +13,6 @@ const teacherRoutes = new Router();
 
 // Add teacherRoutes
 teacherRoutes.get("/View", authToken, TeacherCheck, ViewTeacherProfile);
-teacherRoutes.post("/Update", authToken, TeacherCheck, UpdateTeacherProfile);
+teacherRoutes.put("/Update", authToken, TeacherCheck, UpdateTeacherProfile);
 
 export default teacherRoutes;

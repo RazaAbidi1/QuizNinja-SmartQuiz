@@ -42,7 +42,7 @@ export class Teacher {
 
   static findById = (id, result) => {
     sql.query(
-      "select * from teacher where teacher_id = ?",
+      "select * from teacher,subject where subject__id = subject_id and teacher_id = ?;",
       [id],
       (err, res) => {
         if (err) {
@@ -80,7 +80,7 @@ export class Teacher {
 
   static updateById = (id, values, result) => {
     sql.query(
-      "UPDATE teacher SET teacher_password = ? WHERE teacher_id = ? ",
+      "UPDATE teacher SET ? WHERE teacher_id = ? ",
       [values, id],
       (err, res) => {
         if (err) {

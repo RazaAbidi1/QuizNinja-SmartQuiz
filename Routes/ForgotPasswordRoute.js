@@ -8,7 +8,12 @@ import {
   AuthUser_Teacher,
   Reset_Password_Teacher,
   Verify_Email_Teacher,
-} from "../Controller/ForgetPasswordController.js";
+} from "../Controller/TeacherForgetPasswordController.js";
+import {
+  AuthUser_Student,
+  Reset_Password_Student,
+  Verify_Email_Student,
+} from "../Controller/StudentForgetPassword.js";
 
 // import all controllers
 // import SessionController from './app/controllers/SessionController';
@@ -17,12 +22,13 @@ const ForgetPasswordRoute = new Router();
 
 // Add ForgetPasswordRoute
 // Student
-ForgetPasswordRoute.post("Student/verifyEmail");
-ForgetPasswordRoute.post("Student/authUser/");
+ForgetPasswordRoute.post("/Student/verifyEmail", Verify_Email_Student);
+ForgetPasswordRoute.post("/Student/authUser/", AuthUser_Student);
 ForgetPasswordRoute.post(
-  "Student/resetPassword",
+  "/Student/resetPassword",
   authToken,
-  StudentPasswordReset
+  StudentPasswordReset,
+  Reset_Password_Student
 );
 // Teacher
 ForgetPasswordRoute.post("/Teacher/verifyEmail", Verify_Email_Teacher);

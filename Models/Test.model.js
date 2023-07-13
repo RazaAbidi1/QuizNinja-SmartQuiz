@@ -24,7 +24,7 @@ export class Test {
 
   static Student_View = (id, cb) => {
     sql.query(
-      "select t1.total_marks,t1.student_score,t2.teacher_name,t4.subject_name,t1.test_date from test t1 join student t3 on t1.student_iid = t3.student_id join teacher t2 on t1.teacher_iid = t2.teacher_id join subject t4 on t2.subject__id = t4.subject_id where t3.student_id = ?;",
+      "select t1.test_result,t1.total_marks,t1.student_score,t2.teacher_name,t4.subject_name,t1.test_date from test t1 join student t3 on t1.student_iid = t3.student_id join teacher t2 on t1.teacher_iid = t2.teacher_id join subject t4 on t2.subject__id = t4.subject_id where t3.student_id = ?;",
       [id],
       (err, res) => {
         if (err) {

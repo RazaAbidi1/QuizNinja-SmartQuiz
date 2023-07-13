@@ -62,7 +62,7 @@ export class Student {
 
   static updateById = (id, values, result) => {
     sql.query(
-      "UPDATE student SET student_password = ? WHERE student_id = ? ",
+      "UPDATE student SET ? WHERE student_id = ? ",
       [values, id],
       (err, res) => {
         if (err) {
@@ -77,6 +77,26 @@ export class Student {
         }
         console.log("updated Teacher: ", res);
         result(null, res);
+      }
+    );
+  };
+
+  static updateByEmail = (email, values, cb) => {
+    sql.query(
+      "UPDATE student SET ? WHERE student_email = ? ",
+      [values, email],
+      (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          cb(err, null);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          cb({ kind: "not_found" }, null);
+          return;
+        }
+        console.log("updated Teacher: ", res);
+        cb(null, res);
       }
     );
   };
@@ -100,9 +120,8 @@ export class Student {
 
   static setDefaultPasswordStudent = (email, pass, cb) => {
     sql.query(
-      "UPDATE student SET  = ? WHERE student_email = ?",
-      email,
-      pass,
+      "UPDATE student SET ? WHERE student_email = ?",
+      [pass, email],
       (err, res) => {
         if (err) {
           cb(err, null);

@@ -3,7 +3,6 @@ import { authToken } from "../Middlewares/auth.js";
 import { TeacherCheck, StudentCheck } from "../Middlewares/Check.js";
 import {
   AddFeedback,
-  StudentViewFeedback,
   TeacherViewFeedback,
 } from "../Controller/FeedbackController.js";
 
@@ -15,12 +14,6 @@ FeedbackRoutes.get(
   authToken,
   TeacherCheck,
   TeacherViewFeedback
-);
-FeedbackRoutes.get(
-  "/Student/View",
-  authToken,
-  StudentCheck,
-  StudentViewFeedback
 );
 
 export default FeedbackRoutes;

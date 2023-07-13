@@ -35,7 +35,7 @@ export class Subject {
 
   static Find_Teacher = (name, result) => {
     sql.query(
-      "SELECT t1.teacher_name, t1.subject__id, t2.subject_id,t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id= t2.subject_id WHERE t2.subject_name = ?;",
+      "SELECT t1.teacher_name,t1.teacher_id, t1.subject__id, t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id= t2.subject_id WHERE t2.subject_name = ?;",
       [name],
       (err, res) => {
         if (err) {

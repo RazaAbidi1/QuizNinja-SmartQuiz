@@ -10,6 +10,6 @@ const StudentRoutes = new Router();
 
 // Add StudentRoutes
 StudentRoutes.get("/View", authToken, StudentCheck, ViewStudentProfile);
-StudentRoutes.post("/Update", authToken, StudentCheck, UpdateStudentProfile);
+StudentRoutes.put("/Update", authToken, StudentCheck, UpdateStudentProfile);
 
 export default StudentRoutes;

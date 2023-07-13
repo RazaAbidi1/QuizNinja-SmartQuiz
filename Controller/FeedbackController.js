@@ -1,12 +1,13 @@
 import { Feedback } from "../Models/Feedback.model.js";
 
 export const AddFeedback = (req, res) => {
-  const { id, teacher_idd, text } = req.body;
-  if (id || teacher_idd || text) {
+  const { id, teacher_id, text, test_id } = req.body;
+  if (id && teacher_id && text && test_id) {
     const feedback = new Feedback({
       id,
-      teacher_idd,
+      teacher_id,
       text,
+      test_id,
     });
     feedback.create((err, result) => {
       console.log(result.insertId);
@@ -27,13 +28,6 @@ export const AddFeedback = (req, res) => {
 export const TeacherViewFeedback = (req, res) => {
   const { id } = req.body;
   Feedback.Teacher_View(id, (err, result) => {
-    if (err) res.send({ err }).status(403);
-    else res.send({ result }).status(200);
-  });
-};
-export const StudentViewFeedback = (req, res) => {
-  const { id } = req.body;
-  Feedback.Student_View(id, (err, result) => {
     if (err) res.send({ err }).status(403);
     else res.send({ result }).status(200);
   });

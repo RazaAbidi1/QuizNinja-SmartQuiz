@@ -2,8 +2,7 @@ import { Questions } from "../Models/Question.model.js";
 
 export const AddQuestion = (req, res) => {
   const {
-    question_id,
-    teacher_idd,
+    id,
     question_text,
     option_a,
     option_b,
@@ -14,8 +13,7 @@ export const AddQuestion = (req, res) => {
     time,
   } = req.body;
   let question = new Questions({
-    question_id: question_id,
-    teacher_idd: teacher_idd,
+    teacher_idd: id,
     question_text: question_text,
     option_a: option_a,
     option_b: option_b,
@@ -25,7 +23,7 @@ export const AddQuestion = (req, res) => {
     marks: marks,
     time: time,
   });
-  if (question_id && teacher_idd) {
+  if (id) {
     question.create((err, result) => {
       console.log(result.insertId);
       if (err) {
@@ -43,9 +41,9 @@ export const AddQuestion = (req, res) => {
   }
 };
 export const ViewQuestion = (req, res) => {
-  const { Id } = req.body;
-  if (Id) {
-    Questions.findById(Id, (err, result) => {
+  const { id } = req.body;
+  if (id) {
+    Questions.findById(id, (err, result) => {
       if (err) res.send({ err }).status(400);
       else res.send({ result }).status(200);
     });
@@ -57,7 +55,7 @@ export const ViewQuestion = (req, res) => {
 export const UpdateQuestion = (req, res) => {
   const {
     question_id,
-    teacher_id,
+    id,
     question_text,
     option_a,
     option_b,
@@ -69,7 +67,7 @@ export const UpdateQuestion = (req, res) => {
   } = req.body;
   let question = {
     question_id: question_id,
-    teacher_id: teacher_idd,
+    teacher_id: id,
     question_text: question_text,
     option_a: option_a,
     option_b: option_b,
@@ -79,20 +77,20 @@ export const UpdateQuestion = (req, res) => {
     question_marks: marks,
     question_time: time,
   };
-  if (question_id && teacher_id) {
-    Questions.updateById(question_id, teacher_id, question, (err, result) => {
-      if (err) res.send({ err }).status(400);
+  if (question_id && id) {
+    Questions.updateById(question_id, id, question, (err, result) => {
+      if (err) res.status(400).send({ err });
       else res.send({ result }).status(200);
     });
   } else {
-    res.send({ err: "Id Required" }).status(403);
+    res.send({ err: "Question Id Required" }).status(403);
   }
 };
 
 export const DeleteQuestion = (req, res) => {
-  const { question_id, teacher_id } = req.body;
-  if (question_id && teacher_id) {
-    Questions.deleteById(question_id, teacher_id, (err, result) => {
+  const { question_id, id } = req.body;
+  if (question_id && id) {
+    Questions.deleteById(question_id, id, (err, result) => {
       if (err) res.send({ err }).status(400);
       else res.send({ result }).status(200);
     });

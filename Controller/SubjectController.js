@@ -1,5 +1,9 @@
 import { Subject } from "../Models/Subject.model.js";
 
+export const Add_Subject = (req, res) => {
+  return res.status(200).send({ msg: "Work under Progress" });
+};
+
 export const View_Subject = (req, res) => {
   Subject.getAll((err, result) => {
     if (err) res.send({ err }).status(403);
