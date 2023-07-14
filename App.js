@@ -32,7 +32,11 @@ app.use("/resetpassword", ForgetPasswordRoute); //done
 app.use("/images", ImageRoutes); // errors
 
 // Without token server 500 ka error dy raha hai ... usko 400 ka error hona chahiye
-
+// WORK LEFT:
+// student dashboard
+// quiz
+// student cannot give a quiz again
+// image handling
 app.get("/check", (req, res) => {
   console.log(req);
   res.send({ message: "Waiz Here" }).status(200);

@@ -89,6 +89,15 @@ export class Questions {
       }
     );
   };
+
+  static avgOfQuestionsForEachTeacher = (teacher_id, cb) => {
+    sql.query(
+      "SELECT questions.question_id, AVG(result.student_score) AS average_marks FROM questions JOIN result ON questions.question_id = result.question__id WHERE questions.teacher_id = '2' GROUP BY questions.question_id;",
+      teacher_id,
+      cb
+    );
+  };
+  static addQuestionRating = (id, rating, cb) => {};
 }
 
 // const test = {

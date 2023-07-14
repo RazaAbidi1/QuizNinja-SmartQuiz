@@ -1,25 +1,28 @@
 import { Feedback } from "../Models/Feedback.model.js";
 
 export const AddFeedback = (req, res) => {
-  const { id, teacher_id, text, test_id } = req.body;
+  const { id, teacher_id, text, test_id, rating } = req.body;
   if (id && teacher_id && text && test_id) {
     const feedback = new Feedback({
       id,
       teacher_id,
       text,
       test_id,
+      rating,
     });
     feedback.create((err, result) => {
-      console.log(result.insertId);
       if (err) {
         res.status(401).json({
           success: false,
           message: { err },
           result: {},
         });
-      } else if (result.insertId) {
+      } else if (result.insertId !== undefined) {
         res.send({ insertId: result.insertId }).status(200);
-      } else res.send({ message: "something went wrong" }).status(400);
+      } else {
+        
+        res.status(400).send({ message: "something went wrong" });
+      }
     });
   } else {
     res.send({ message: "Incomplete parameters" }).status(400);
