@@ -1,47 +1,69 @@
-import { Student } from "../Models/Student.model";
-import { Teacher } from "../Models/Teacher.model";
-import { SendEmail } from "../Services/EmailTest";
+import { Feedback } from "../Models/Feedback.model.js";
 
-// Teacher
-export const Verify_Email_Teacher = (req, res) => {
-  const { email } = req.body;
-  if (email) {
-    Teacher.findByUserName(email, (err, res) => {
-      if (err) res.send(err).status(403);
-      else {
-        // Generate Random Code and send Email
-        const code = "dvdv";
-        const Text = `The Code to reset your Password is :\n\ ${code}`;
-        SendEmail(email, "Re-set Password", Text, (err, result) => {
-          // Yahan Kam hona hai
-        });
-      }
+export const AddFeedback = async (req, res) => {
+  try {
+    const { id, teacher_idd, text } = req.body;
+    if (id || teacher_idd || text) {
+      const feedback = new Feedback({
+        id,
+        teacher_idd,
+        text,
+      });
+      feedback.create((err, result) => {
+        console.log(result.insertId);
+        if (err) {
+          res.status(401).json({
+            success: false,
+            message: { err },
+            result: {},
+          });
+        } else if (result.insertId) {
+          res.send({ insertId: result.insertId }).status(200);
+        } else res.send({ message: "something went wrong" }).status(400);
+      });
+    } else {
+      res.send({ message: "Incomplete parameters" }).status(400);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred",
+      error: error.message,
     });
-  } else {
-    res.send({ err: "Email Required" }).status(400);
   }
 };
-export const AuthUser_Teacher = (req, res) => {};
-export const Reset_Password_Teacher = (req, res) => {};
 
-// Student
-export const Verify_Email_Student = (req, res) => {
-  const { email } = req.body;
-  if (email) {
-    Student.findByUserName(email, (err, res) => {
-      if (err) res.send(err).status(403);
-      else {
-        // Generate Random Code and send Email
-        const code = "dvdv";
-        const Text = `The Code to reset your Password is :\n\ ${code}`;
-        SendEmail(email, "Re-set Password", Text, (err, result) => {
-          // Yahan Kam hona hai
-        });
-      }
+export const TeacherViewFeedback = async (req, res) => {
+  try {
+    const { id } = req.body;
+    Feedback.Teacher_View(id, (err, result) => {
+      if (err) throw err;
+      else res.send({ result }).status(200);
     });
-  } else {
-    res.send({ err: "Email Required" }).status(400);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred",
+      error: error.message,
+    });
   }
 };
-export const AuthUser_Student = (req, res) => {};
-export const Reset_Password_Student = (req, res) => {};
+
+export const StudentViewFeedback = async (req, res) => {
+  try {
+    const { id } = req.body;
+    Feedback.Student_View(id, (err, result) => {
+      if (err) throw err;
+      else res.send({ result }).status(200);
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred",
+      error: error.message,
+    });
+  }
+};
