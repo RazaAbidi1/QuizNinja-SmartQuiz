@@ -1,7 +1,7 @@
 import { CreateToken } from "../Middlewares/auth.js";
 import { Student } from "../Models/Student.model.js";
-import { generateRandomNumber } from "../Services/CodeGeneration.js";
-import { SendEmail } from "../Services/SendEamail.js";
+import { generateRandomNumber } from "../Helper/CodeGeneration.js";
+import { SendEmail } from "../Helper/SendEamail.js";
 
 export const Verify_Email_Student = (req, res) => {
   const { email } = req.body;

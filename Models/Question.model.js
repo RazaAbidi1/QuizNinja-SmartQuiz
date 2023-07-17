@@ -28,7 +28,7 @@ export class Questions {
 
   static findById = (id, result) => {
     sql.query(
-      `SELECT * FROM questions WHERE teacher_id = ?`,
+      `SELECT question_text,option_a,option_b,option_c,option_d,question_time,question_marks FROM questions WHERE teacher_id = ?`,
       [id],
       (err, res) => {
         if (err) {

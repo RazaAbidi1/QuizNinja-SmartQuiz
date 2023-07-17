@@ -1,7 +1,7 @@
 import { Percent } from "@mui/icons-material";
 import { Student } from "../Models/Student.model.js";
 import { Teacher } from "../Models/Teacher.model.js";
-import { percent } from "../Services/calculatePercentage.js";
+import { percent } from "../Helper/calculatePercentage.js";
 import { Questions } from "../Models/Question.model.js";
 
 export const ViewTeacherProfile = (req, res) => {

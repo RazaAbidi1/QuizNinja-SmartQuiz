@@ -47,3 +47,16 @@ export const StudentPasswordReset = (req, res, next) => {
     result: {},
   });
 };
+
+export const startTest = (req, res, next) => {
+  if (req.body.Type === "Start Test") {
+    console.log(req.body.Type);
+    next();
+    return;
+  }
+  res.status(403).json({
+    success: false,
+    message: "Access Not Allowed",
+    result: {},
+  });
+};
