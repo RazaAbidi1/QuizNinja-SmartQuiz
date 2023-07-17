@@ -2,7 +2,9 @@ import { CreateToken } from "../Middlewares/auth.js";
 import { Student } from "../Models/Student.model.js";
 import { Teacher } from "../Models/Teacher.model.js";
 
-export const TeacherSignUp = (req, res) => {
+export const TeacherSignUp = (req, res) => {try {
+  
+
   const { UserName, Password, Name, subject_id } = req.body;
   let teacher = new Teacher({
     teacher_name: Name,
@@ -25,9 +27,19 @@ export const TeacherSignUp = (req, res) => {
       res.send({ token: token, insertId: result.insertId }).status(200);
     }
   });
+} catch (error) {
+  console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred",
+      error: error.message,
+    });
+}
 };
 
-export const StudentSignUp = (req, res) => {
+export const StudentSignUp = (req, res) => { try {
+  
+
   const { UserName, Password, Name, Dob } = req.body;
   let std = new Student({
     UserName,
@@ -50,4 +62,11 @@ export const StudentSignUp = (req, res) => {
       res.send({ token: token, insertId: result.insertId }).status(200);
     }
   });
+} catch (error) {
+  console.log(error);
+  res.status(500).json({
+    success: false,
+    message: "An error occurred",
+    error: error.message,});  
+}
 };
