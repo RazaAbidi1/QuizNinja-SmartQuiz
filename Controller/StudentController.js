@@ -27,13 +27,75 @@ export const UpdateStudentProfile = (req, res) => {
 export const StudentDashBoard = (req, res) => {
   const { id } = req.body;
   Student.AllSubjectMarks(id, (err, allSubjectMarks) => {
-    if (err) res.status(400).send({ err: err.sqlMesage });
-    else {
-      res.status(200).send({ allSubjectMarks });
+    if (err) {
+      res.status(400).send({ err: err.sqlMesage });
+      return;
+    } else {
       Teacher.allTopNRated(6, (err, allTopRated) => {
-        if (err) res.status(400).send({ err: err.sqlMesage });
-        else {
-          
+        if (err) {
+          res.status(400).send({ err: err.sqlMesage });
+          return;
+        } else {
+          Teacher.TopNRatedSubject(6, "Maths", (err, Maths) => {
+            if (err) {
+              res.status(400).send({ err: err.sqlMesage });
+              return;
+            } else {
+              Teacher.TopNRatedSubject(6, "English", (err, English) => {
+                if (err) {
+                  res.status(400).send({ err: err.sqlMesage });
+                  return;
+                } else {
+                  Teacher.TopNRatedSubject(6, "Ecommerce", (err, Ecommerce) => {
+                    if (err) {
+                      res.status(400).send({ err: err.sqlMesage });
+                      return;
+                    } else {
+                      Teacher.TopNRatedSubject(6, "Physics", (err, Physics) => {
+                        if (err) {
+                          res.status(400).send({ err: err.sqlMesage });
+                          return;
+                        } else {
+                          Teacher.TopNRatedSubject(
+                            6,
+                            "Chemistry",
+                            (err, Chemistry) => {
+                              if (err)
+                                res.status(400).send({ err: err.sqlMesage });
+                              else {
+                                Teacher.TopNRatedSubject(
+                                  6,
+                                  "Computer Science",
+                                  (err, CS) => {
+                                    if (err)
+                                      res
+                                        .status(400)
+                                        .send({ err: err.sqlMesage });
+                                    else {
+                                      res.status(200).send({
+                                        allSubjectMarks,
+                                        allTopRated,
+                                        Maths,
+                                        English,
+                                        Ecommerce,
+                                        Physics,
+                                        Chemistry,
+                                        CS,
+                                      });
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
         }
       });
     }

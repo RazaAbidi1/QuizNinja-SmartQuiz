@@ -105,6 +105,27 @@ export class Test {
       }
     );
   };
+
+  static updateById = (test_id, values, result) => {
+    sql.query(
+      "UPDATE test SET ? WHERE test_id = ?  ",
+      [values, test_id],
+      (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          // Test with the given id and student/teacher IDs not found
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        console.log("Updated test: ", res);
+        result(null, res);
+      }
+    );
+  };
 }
 
 // Test.Teacher_View(2, (err, result) => {

@@ -201,6 +201,14 @@ export class Teacher {
       cb
     );
   };
+
+  static TopNRatedSubject = (n, subject, cb) => {
+    sql.query(
+      "SELECT t.teacher_id, t.teacher_name, t.teacher_rating FROM teacher t JOIN subject ts ON t.subject__id = ts.subject_id WHERE ts.subject_name = ? ORDER BY t.teacher_rating DESC LIMIT ?;",
+      [subject, n],
+      cb
+    );
+  };
 }
 
 // let test = {

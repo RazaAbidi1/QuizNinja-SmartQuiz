@@ -20,6 +20,27 @@ export class answer {
       result(null, res);
     });
   };
+
+  static updateAnswerById = (answer_id, values, result) => {
+    sql.query(
+      "UPDATE Answer SET ? WHERE answer_id = ?",
+      [values, answer_id],
+      (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          // No Answer found with the provided id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        console.log("Updated Answer: ", res);
+        result(null, res);
+      }
+    );
+  };
 }
 
 // Testing
