@@ -16,7 +16,7 @@ export class Feedback {
         return;
       }
       console.log("Created FeedBack: ", res.insertId);
-      Feedback.updateRating(res.insertId, this.teacher_idd, result);
+      Feedback.updateRating(this.teacher_idd, res.insertId, result);
     });
   };
 

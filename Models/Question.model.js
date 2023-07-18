@@ -97,22 +97,4 @@ export class Questions {
       cb
     );
   };
-  static addQuestionRating = (id, rating, cb) => {};
 }
-
-// const test = {
-//   question_id: 1,
-//   teacher_id: 2,
-//   question_text: "Which of the following is an example of a Saddness?",
-//   option_a: "The wind howled like a wolf.",
-//   option_b: "The sun shone brightly.",
-//   option_c: "The tree branches danced in the breeze.",
-//   option_d: "The water flowed smoothly.",
-//   correct_answer: "option_a",
-//   question_time: 3,
-//   question_marks: 30,
-// };
-// Questions.updateById(test.question_id, test.teacher_id, test, (err, res) => {
-//   if (err) console.log(err);
-//   else console.log(res);
-// });

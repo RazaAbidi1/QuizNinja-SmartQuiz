@@ -40,14 +40,13 @@ app.use("/Teacher", teacherRoutes); //done
 app.use("/Student", StudentRoutes); //done
 app.use("/Test", TestRoute); //done -> answer aur test mein thoray changes hongy
 app.use("/resetpassword", ForgetPasswordRoute); //done responsenai araha
-app.use("/images", ImageRoutes); // errors
+app.use("/images", ImageRoutes); //->done
 
 // Without token server 500 ka error dy raha hai ... usko 400 ka error hona chahiye
 // WORK LEFT:
 // student dashboard
 // quiz
 // student cannot give a quiz again
-// image handling
 
 app.get("/check", (req, res) => {
   console.log(req);

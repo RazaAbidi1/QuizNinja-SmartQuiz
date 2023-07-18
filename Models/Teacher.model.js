@@ -194,6 +194,13 @@ export class Teacher {
       );
     });
   };
+  static allTopNRated = (n, cb) => {
+    sql.query(
+      "SELECT teacher_id, teacher_name, teacher_rating FROM teacher ORDER BY teacher_rating DESC LIMIT ?;",
+      [n],
+      cb
+    );
+  };
 }
 
 // let test = {

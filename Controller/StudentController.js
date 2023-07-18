@@ -1,4 +1,5 @@
 import { Student } from "../Models/Student.model.js";
+import { Teacher } from "../Models/Teacher.model.js";
 
 export const ViewStudentProfile = (req, res) => {
   const { id } = req.body;
@@ -21,4 +22,20 @@ export const UpdateStudentProfile = (req, res) => {
   } else {
     res.send({ err: "Id and Password Required" }).status(400);
   }
+};
+
+export const StudentDashBoard = (req, res) => {
+  const { id } = req.body;
+  Student.AllSubjectMarks(id, (err, allSubjectMarks) => {
+    if (err) res.status(400).send({ err: err.sqlMesage });
+    else {
+      res.status(200).send({ allSubjectMarks });
+      Teacher.allTopNRated(6, (err, allTopRated) => {
+        if (err) res.status(400).send({ err: err.sqlMesage });
+        else {
+          
+        }
+      });
+    }
+  });
 };

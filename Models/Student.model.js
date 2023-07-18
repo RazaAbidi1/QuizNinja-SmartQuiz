@@ -163,6 +163,14 @@ export class Student {
       cb
     );
   };
+
+  static AllSubjectMarks = (id, cb) => {
+    sql.query(
+      "SELECT s.student_id, s.student_name, sub.subject_id, sub.subject_name, AVG(t.test_result) AS average_marks FROM student s JOIN test t ON s.student_id = t.student_iid JOIN teacher te ON t.teacher_iid = te.teacher_id JOIN subject sub ON te.subject__id = sub.subject_id WHERE s.student_id = 2 GROUP BY s.student_id, s.student_name, sub.subject_id, sub.subject_name;",
+      [id],
+      cb
+    );
+  };
 }
 
 // {

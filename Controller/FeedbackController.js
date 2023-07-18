@@ -20,7 +20,6 @@ export const AddFeedback = (req, res) => {
       } else if (result.insertId !== undefined) {
         res.send({ insertId: result.insertId }).status(200);
       } else {
-        
         res.status(400).send({ message: "something went wrong" });
       }
     });
