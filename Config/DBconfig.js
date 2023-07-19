@@ -1,11 +1,11 @@
-import mysql from "mysql2";
+import mysql from "mysql2"; // Importing the mysql module
 
 export const sql = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "0321",
-  database: "quiz",
-  port: "3308",
+  host: "localhost",      // Host name
+  user: "root",           // Username 
+  password: "0321",       // Password
+  database: "quiz",       // Database Name
+  port: "3308",           // Port number 
 });
 
-export default sql;
+export default sql;       // Exporting the created MySQL connection pool as the default export
