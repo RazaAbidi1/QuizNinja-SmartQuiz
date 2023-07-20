@@ -1,30 +1,38 @@
+// Import the sql connection from the DBconfig module
 import sql from "../Config/DBconfig.js";
 
+// Class representing a 'Test' object
 export class Test {
   constructor(test) {
+    // Initialize properties of the 'Test' object based on the provided data
+     this.student_iid = test.student_id;
     this.teacher_iid = test.teacher_id;
-    this.teacher_iid = test.student_id;
     this.student_score = test.marks_scored;
     this.total_marks = test.total_marks;
     this.test_time = test.total_test_time;
     this.test_date = test.test_date;
     this.result = test.result;
   }
+
+  // Method to create a 'Test' record in the database
   create = (cd) => {
+    // Execute the SQL query to insert the 'Test' object into the 'Test' table
     sql.query("INSERT INTO Test SET ? ", [this], (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(err, null);
+        cd(err, null);
         return;
       }
       console.log("Created Test: ", res);
-      result(null, res);
+      cd(null, res); 
     });
   };
 
+  // Static method to get test information for a specific student
   static Student_View = (id, cb) => {
+    // Execute the SQL query to retrieve test information for a specific student
     sql.query(
-      "select t1.test_result,t1.total_marks,t1.student_score,t2.teacher_name,t4.subject_name,t1.test_date from test t1 join student t3 on t1.student_iid = t3.student_id join teacher t2 on t1.teacher_iid = t2.teacher_id join subject t4 on t2.subject__id = t4.subject_id where t3.student_id = ?;",
+      "SELECT t1.test_result, t1.total_marks, t1.student_score, t2.teacher_name, t4.subject_name, t1.test_date FROM test t1 JOIN student t3 ON t1.student_iid = t3.student_id JOIN teacher t2 ON t1.teacher_iid = t2.teacher_id JOIN subject t4 ON t2.subject__id = t4.subject_id WHERE t3.student_id = ?;",
       [id],
       (err, res) => {
         if (err) {
@@ -33,19 +41,22 @@ export class Test {
           return;
         }
         if (res.length) {
-          console.log("found Test: ", res);
+          console.log("Found Test: ", res);
           cb(null, res);
           return;
         }
-        // not found Test with the id
+        // No test found with the provided student ID
         cb({ kind: "not_found" }, null);
       }
     );
   };
+
+  // Static method to get test information for a specific teacher
   static Teacher_View = (id, cb) => {
     console.log(id);
+    // Execute the SQL query to retrieve test information for a specific teacher
     sql.query(
-      "select t1.total_marks,t1.student_score,t3.student_name,t1.test_date from test t1 join student t3 on t1.student_iid = t3.student_id join teacher t2 on t1.teacher_iid = t2.teacher_id join subject t4 on t2.subject__id = t4.subject_id where t2.teacher_id = ?",
+      "SELECT t1.total_marks, t1.student_score, t3.student_name, t1.test_date FROM test t1 JOIN student t3 ON t1.student_iid = t3.student_id JOIN teacher t2 ON t1.teacher_iid = t2.teacher_id JOIN subject t4 ON t2.subject__id = t4.subject_id WHERE t2.teacher_id = ?",
       id,
       (err, res) => {
         if (err) {
@@ -54,19 +65,21 @@ export class Test {
           return;
         }
         if (res.length) {
-          console.log("found Test: ", res);
+          console.log("Found Test: ", res);
           cb(null, res);
           return;
         }
-        // not found Test with the id
+        // No test found with the provided teacher ID
         cb({ kind: "not_found" }, null);
       }
     );
   };
 
+  // Static method to get the number of students who failed in tests for a specific teacher
   static Number_Of_Students_Failed = (id, cb) => {
+    // Execute the SQL query to count the number of students who failed in tests for a specific teacher
     sql.query(
-      `SELECT COUNT(DISTINCT student_iid) AS students_passed FROM test where teacher_iid = ? and test_result='fail';`,
+      `SELECT COUNT(DISTINCT student_iid) AS students_passed FROM test WHERE teacher_iid = ? AND test_result='fail';`,
       id,
       (err, res) => {
         if (err) {
@@ -75,19 +88,21 @@ export class Test {
           return;
         }
         if (res.length) {
-          console.log("found Test: ", res);
+          console.log("Found Test: ", res);
           cb(null, res);
           return;
         }
-        // not found Test with the id
+        // No test found with the provided teacher ID
         cb({ kind: "not_found" }, null);
       }
     );
   };
 
+  // Static method to get the number of students who passed in tests for a specific teacher
   static Number_Of_Students_Passed = (id, cb) => {
+    // Execute the SQL query to count the number of students who passed in tests for a specific teacher
     sql.query(
-      `SELECT COUNT(DISTINCT student_iid) AS students_passed FROM test where teacher_iid = ? and test_result='pass';`,
+      `SELECT COUNT(DISTINCT student_iid) AS students_passed FROM test WHERE teacher_iid = ? AND test_result='pass';`,
       id,
       (err, res) => {
         if (err) {
@@ -96,17 +111,19 @@ export class Test {
           return;
         }
         if (res.length) {
-          console.log("found Test: ", res);
+          console.log("Found Test: ", res);
           cb(null, res);
           return;
         }
-        // not found Test with the id
+        // No test found with the provided teacher ID
         cb({ kind: "not_found" }, null);
       }
     );
   };
 
+  // Static method to update a test record by test ID
   static updateById = (test_id, values, result) => {
+    // Execute the SQL query to update a test record by test ID
     sql.query(
       "UPDATE test SET ? WHERE test_id = ?  ",
       [values, test_id],
@@ -117,7 +134,7 @@ export class Test {
           return;
         }
         if (res.affectedRows == 0) {
-          // Test with the given id and student/teacher IDs not found
+          // Test with the given ID and student/teacher IDs not found
           result({ kind: "not_found" }, null);
           return;
         }
@@ -128,6 +145,3 @@ export class Test {
   };
 }
 
-// Test.Teacher_View(2, (err, result) => {
-//   if (err) console.log({ err });
-// });
