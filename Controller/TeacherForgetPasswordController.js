@@ -1,19 +1,22 @@
+// Import required modules and models
 import { CreateToken } from "../Middlewares/auth.js";
 import { Teacher } from "../Models/Teacher.model.js";
 import { generateRandomNumber } from "../Helper/CodeGeneration.js";
 import { SendEmail } from "../Helper/SendEamail.js";
 
+// Verify Teacher's email and initiate the password reset process
 export const Verify_Email_Teacher = async (req, res) => {
   try {
     const { email } = req.body;
     if (email) {
+      // Check if the teacher's email exists in the database
       Teacher.findByEmail(email, (err, result1) => {
         if (err) throw err;
         else {
-          // Generate Random Code and send Email
+          // If the email exists, generate a random code, send it via email, and update the default password for the teacher
           if (result1.Found === true) {
             const code = generateRandomNumber();
-            const Text = `The Code to reset your Password is :\n\ ${code}`;
+            const Text = `The Code to reset your Password is :\n\ ${code}`;    //Yahan Email ayegi
             SendEmail(email, "Re-set Password", Text, (err, info) => {
               if (err) throw err;
               else {
@@ -50,15 +53,18 @@ export const Verify_Email_Teacher = async (req, res) => {
   }
 };
 
+// Authenticate the teacher using the verification code sent via email
 export const AuthUser_Teacher = async (req, res) => {
   try {
     const { code, email } = req.body;
     if (code) {
+      // Find the teacher's default password using their email
       Teacher.findDefaultPasswordTeacher(email, (err, result) => {
         if (err) {
           res.send({ err }).status(403);
         } else {
           if (result.Found && result[0].teacher_default_password) {
+            // If the teacher's default password matches the verification code, create a token for password reset
             if (result[0].teacher_default_password === code) {
               const token = CreateToken({ id: email }, "Teacher Reset Password ");
               Teacher.findDefaultPasswordTeacher(email, (err, response) => {
@@ -70,9 +76,11 @@ export const AuthUser_Teacher = async (req, res) => {
                 }
               });
             } else {
+              // If the verification code does not match the teacher's default password, send an error response
               res.send({ err: "Wrong Code Entered" }).status(400);
             }
           } else {
+            // If no default password or email is found, send an error response
             res
               .send({ err: "Email Not Found Or Reset Is Not Required" })
               .status(400);
@@ -92,18 +100,22 @@ export const AuthUser_Teacher = async (req, res) => {
   }
 };
 
+// Reset Teacher's password
 export const Reset_Password_Teacher = async (req, res) => {
   try {
     const { id, password } = req.body;
+    // Update the teacher's password using their email
     Teacher.updateByEmail(id, { teacher_password: password }, (err, result) => {
       if (err) res.send({ err }).status(400);
       else {
+        // Reset the teacher's default password to null
         Teacher.setDefaultPasswordTeacher(
           id,
           { teacher_default_password: null },
           (err, info) => {
             if (err) res.send({ err }).status(400);
             else {
+              // Password reset successful, send a success message
               res
                 .send({ msg: "Password re-set has been done. Now Login" })
                 .status(200);
