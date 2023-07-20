@@ -1,14 +1,19 @@
+// Import the sql connection from the DBconfig module
 import { sql } from "../Config/DBconfig.js";
 
+// Class representing a 'Teacher' object
 export class Teacher {
   constructor(teacher) {
+    // Initialize properties of the 'Teacher' object based on the provided data
     this.teacher_name = teacher.teacher_name;
     this.teacher_username = teacher.teacher_username;
     this.teacher_password = teacher.teacher_password;
     this.subject__id = teacher.subject__id;
   }
 
+  // Method to create a 'Teacher' record in the database
   create = (result) => {
+    // Execute the SQL query to insert the 'Teacher' object into the 'teacher' table
     sql.query("INSERT INTO teacher SET ?", [this], (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -20,7 +25,9 @@ export class Teacher {
     });
   };
 
+  // Static method to find a teacher by email
   static findByEmail = (email, result) => {
+    // Execute the SQL query to retrieve a teacher with the provided email
     sql.query(
       `SELECT * FROM Teacher WHERE teacher_email = ?`,
       [email],
@@ -30,19 +37,21 @@ export class Teacher {
           return;
         }
         if (res.length) {
-          console.log("found Login: ", res);
+          console.log("Found Teacher: ", res);
           result(null, { Found: true, ...res });
           return;
         }
-        // not found Login with the userName
+        // No teacher found with the provided email
         result(null, { Found: false, ...res });
       }
     );
   };
 
+  // Static method to find a teacher by ID along with the subject details
   static findById = (id, result) => {
+    // Execute the SQL query to retrieve a teacher by ID and join the subject details
     sql.query(
-      "select * from teacher,subject where subject__id = subject_id and teacher_id = ?;",
+      "SELECT * FROM teacher, subject WHERE subject__id = subject_id AND teacher_id = ?;",
       [id],
       (err, res) => {
         if (err) {
@@ -50,18 +59,21 @@ export class Teacher {
           return;
         }
         if (res.length) {
-          console.log("found Record: ", res);
+          console.log("Found Record: ", res);
           result(null, { Found: true, ...res });
           return;
         }
+        // No teacher found with the provided ID
         result(null, { Found: false, ...res });
       }
     );
   };
 
+  // Static method to find a teacher's subject
   static Find_Subject = (id, result) => {
+    // Execute the SQL query to retrieve a teacher's subject by teacher ID
     sql.query(
-      "SELECT t1.teacher_name, t1.subject__id, t2.subject_id,t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id= t2.subject_id WHERE t1.teacher_id = ?;",
+      "SELECT t1.teacher_name, t1.subject__id, t2.subject_id, t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id = t2.subject_id WHERE t1.teacher_id = ?;",
       [id],
       (err, res) => {
         if (err) {
@@ -69,16 +81,19 @@ export class Teacher {
           return;
         }
         if (res.length) {
-          console.log("found subject name: ", res);
+          console.log("Found Subject Name: ", res);
           result(null, { Found: true, ...res });
           return;
         }
+        // No subject found associated with the teacher's ID
         result(null, { Found: false, ...res });
       }
     );
   };
 
+  // Static method to update a teacher's record by ID
   static updateById = (id, values, result) => {
+    // Execute the SQL query to update a teacher's record by ID
     sql.query(
       "UPDATE teacher SET ? WHERE teacher_id = ? ",
       [values, id],
@@ -89,18 +104,20 @@ export class Teacher {
           return;
         }
         if (res.affectedRows == 0) {
-          // not found Question with the id
+          // No teacher found with the provided ID
           result({ kind: "not_found" }, null);
           return;
         }
-        console.log("updated Teacher: ", res);
+        console.log("Updated Teacher: ", res);
         result(null, res);
       }
     );
   };
 
+  // Static method to set a teacher's default password
   static setDefaultPasswordTeacher = (email, values, cb) => {
     console.log("waiz");
+    // Execute the SQL query to set a teacher's default password
     sql.query(
       "UPDATE teacher SET ? WHERE teacher_email = ?",
       [values, email],
@@ -115,9 +132,11 @@ export class Teacher {
     );
   };
 
+  // Static method to find a teacher's default password
   static findDefaultPasswordTeacher = (email, cb) => {
+    // Execute the SQL query to find a teacher's default password by email
     sql.query(
-      "select teacher_default_password from teacher where teacher_email = ?",
+      "SELECT teacher_default_password FROM teacher WHERE teacher_email = ?",
       [email],
       (err, res) => {
         if (err) {
@@ -125,7 +144,7 @@ export class Teacher {
           return;
         } else {
           if (res.length) {
-            console.log("found Teacher: ", res);
+            console.log("Found Teacher: ", res);
             cb(null, { Found: true, ...res });
             return;
           }
@@ -135,7 +154,9 @@ export class Teacher {
     );
   };
 
+  // Static method to update a teacher's record by email
   static updateByEmail = (email, values, cb) => {
+    // Execute the SQL query to update a teacher's record by email
     sql.query(
       "UPDATE teacher SET ? WHERE teacher_email = ? ",
       [values, email],
@@ -149,44 +170,57 @@ export class Teacher {
           cb({ kind: "not_found" }, null);
           return;
         }
-        console.log("updated Teacher: ", res);
+        console.log("Updated Teacher: ", res);
         cb(null, res);
       }
     );
   };
 
+  // Static method to get the total number of students associated with a teacher
   static totalStudents = (id, cb) => {
+    // Execute the SQL query to count the total number of distinct students associated with a teacher
     sql.query(
-      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test where teacher_iid = 2;",
+      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test WHERE teacher_iid = ?;",
       id,
       cb
     );
   };
 
+  // Static method to get the total number of students passed in tests associated with a teacher
   static studentsPassed = (id, cb) => {
+    // Execute the SQL query to count the total number of students who passed the tests associated with a teacher
     sql.query(
-      "SELECT COUNT(*) AS total_passed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = 2 AND t.test_result = 'Pass';",
-      id,
-      cb
-    );
-  };
-  static studentsFailed = (id, cb) => {
-    sql.query(
-      "SELECT COUNT(*) AS total_failed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = 2 AND t.test_result = 'Fail';",
-      id,
-      cb
-    );
-  };
-  static totalStudents = (id, cb) => {
-    sql.query(
-      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test where test.teacher_iid = ?;",
+      "SELECT COUNT(*) AS total_passed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = ? AND t.test_result = 'Pass';",
       id,
       cb
     );
   };
 
+  // Static method to get the total number of students failed in tests associated with a teacher
+  static studentsFailed = (id, cb) => {
+    // Execute the SQL query to count the total number of students who failed the tests associated with a teacher
+    sql.query(
+      "SELECT COUNT(*) AS total_failed_students FROM test t JOIN student s ON t.student_iid = s.student_id JOIN teacher tch ON tch.teacher_id = t.teacher_iid WHERE tch.teacher_id = ? AND t.test_result = 'Fail';",
+      id,
+      cb
+    );
+  };
+
+  // Static method to get the total number of students associated with a teacher
+  static totalStudents = (id, cb) => {
+    // Execute the SQL query to count the total number of distinct students associated with a teacher
+    sql.query(
+      "SELECT COUNT(DISTINCT student_iid) AS total_students FROM test WHERE test.teacher_iid = ?;",
+      id,
+      cb
+    );
+  };
+
+  // Static method to get the average marks of a teacher's subject
   static subjectAvgOfTeacher = (id, cb) => {
+    // Call the 'Find_Subject' method to retrieve the subject details associated with the teacher
     this.Find_Subject(id, (err, res) => {
+      // Execute the SQL query to calculate the average marks of a teacher's subject
       sql.query(
         "SELECT t.teacher_id, t.teacher_name, AVG(ts.student_score) AS average_marks FROM teacher t JOIN test ts ON t.teacher_id = ts.teacher_iid JOIN student s ON ts.student_iid = s.student_id WHERE t.subject__id = ? GROUP BY t.teacher_id, t.teacher_name;",
         res[0].subject_id,
@@ -194,7 +228,10 @@ export class Teacher {
       );
     });
   };
+
+  // Static method to get the top N rated teachers
   static allTopNRated = (n, cb) => {
+    // Execute the SQL query to retrieve the top N rated teachers
     sql.query(
       "SELECT teacher_id, teacher_name, teacher_rating FROM teacher ORDER BY teacher_rating DESC LIMIT ?;",
       [n],
@@ -202,7 +239,9 @@ export class Teacher {
     );
   };
 
+  // Static method to get the top N rated teachers for a specific subject
   static TopNRatedSubject = (n, subject, cb) => {
+    // Execute the SQL query to retrieve the top N rated teachers for a specific subject
     sql.query(
       "SELECT t.teacher_id, t.teacher_name, t.teacher_rating FROM teacher t JOIN subject ts ON t.subject__id = ts.subject_id WHERE ts.subject_name = ? ORDER BY t.teacher_rating DESC LIMIT ?;",
       [subject, n],
@@ -211,22 +250,3 @@ export class Teacher {
   };
 }
 
-// let test = {
-//   teacher_name: "raza",
-//   teacher_username: "Raza2",
-//   teacher_password: "0123456",
-//   subject__id: '1',
-// };
-
-// let teacher = new Teacher(test);
-// teacher.create((err, res) => {
-//   if (err) console.log(err);
-//   else console.log(res);
-// });
-
-// Teacher.findDefaultPasswordTeacher("waizbinqasim0@gmail.com", (err, res) => {
-//   if (err) console.log(err);
-//   else {
-//     console.log(res[0].teacher_default_password);
-//   }
-// });
