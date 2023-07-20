@@ -1,3 +1,5 @@
+// Image geting saved in this function
+
 export const uploadImage = (req, res) => {
   console.log("file Saved");
 };
