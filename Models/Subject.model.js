@@ -1,11 +1,17 @@
+// Import the sql connection from the DBconfig module
 import { sql } from "../Config/DBconfig.js";
 
+// Class representing a 'Subject' object
 export class Subject {
   constructor(subject) {
+    // Initialize properties of the 'Subject' object based on the provided data
     this.subject_id = subject.id;
     this.subject_name = subject.name;
   }
+
+  // Method to create a 'Subject' record in the database
   create = (result) => {
+    // Execute the SQL query to insert the 'Subject' object into the 'subject' table
     sql.query("INSERT INTO subject SET ?", [this], (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -17,25 +23,29 @@ export class Subject {
     });
   };
 
+  // Static method to get all subjects from the 'subject' table
   static getAll = (result) => {
-    sql.query("Select subject_name From subject", (err, res) => {
+    // Execute the SQL query to retrieve all subjects from the 'subject' table
+    sql.query("SELECT subject_name FROM subject", (err, res) => {
       if (err) {
         result(err, null);
         return;
       }
       if (res.length) {
-        console.log("found Teachers: ", res);
+        console.log("Found Subjects: ", res);
         result(null, { Found: true, ...res });
         return;
       }
-      // not found Login with the id
+      // No subjects found in the 'subject' table
       result(null, { Found: false, ...res });
     });
   };
 
+  // Static method to find teachers associated with a specific subject
   static Find_Teacher = (name, result) => {
+    // Execute the SQL query to retrieve teachers associated with the provided subject name
     sql.query(
-      "SELECT t1.teacher_name,t1.teacher_id, t1.subject__id, t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id= t2.subject_id WHERE t2.subject_name = ?;",
+      "SELECT t1.teacher_name, t1.teacher_id, t1.subject__id, t2.subject_name FROM teacher t1 JOIN subject t2 ON t1.subject__id = t2.subject_id WHERE t2.subject_name = ?;",
       [name],
       (err, res) => {
         if (err) {
@@ -43,30 +53,14 @@ export class Subject {
           return;
         }
         if (res.length) {
-          console.log("found Teachers: ", res);
+          console.log("Found Teachers: ", res);
           result(null, { Found: true, ...res });
           return;
         }
-        // not found Login with the id
+        // No teachers found associated with the provided subject name
         result(null, { Found: false, ...res });
       }
     );
   };
-
 }
 
-// Testing
-// let ans = new answer({
-//   answer_id: "1",
-//   question_id: "1",
-//   selected_answer: "1",
-//   correct_answer: "2",
-//   student__id: "1",
-//   teacher__id: "5",
-// });
-// ans.create((err, res) => {
-//   if (err) console.log(err);
-//   else {
-//     console.log(res);
-//   }
-// });
